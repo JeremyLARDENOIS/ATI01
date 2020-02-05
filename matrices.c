@@ -25,7 +25,7 @@ void delete_tab(int** T, int nb_ligne, int nb_col){
 	free(T);
 }
 
-void afficher_tab(int **tableau, int nb_ligne, int nb_col){
+void afficher_tab(int** tableau, int nb_ligne, int nb_col){
 	int i,j;
 	for (i=0;i<nb_ligne;i++){
 		for (j=0;j<nb_col;j++){
@@ -44,17 +44,27 @@ int main(){
 	printf ("%d \n",a[2][1]);
 	*/
 	int nb_ligne = 5, nb_col = 5;
-	int **tableau = create_tab(5,5);
-	
+	//int **tableau = create_tab(5,5);
+	int tableau [nb_ligne][nb_col];	
 	int i,j;
 	for (i=0;i<nb_ligne;i++){
 		for (j=0;j<nb_col;j++){
-			printf("%d",tableau[i][j]);
+			tableau[i][j] = i+j;// -> ne marche pas
 		}
 	}
-	afficher_tab(tableau,nb_ligne,nb_col);
+	//afficher_tab(tableau,nb_ligne,nb_col);
 
-	delete_tab(tableau,nb_ligne,nb_col);
+	for (i=0;i<nb_ligne;i++){
+		for (j=0;j<nb_col;j++){
+			printf("%d ;",tableau[i][j]);// -> ne marche pas
+		}
+		printf("\n");
+	}
+
+
+
+
+	//delete_tab(tableau,nb_ligne,nb_col);
 
 	//printf ("\n");
 	return 0;
