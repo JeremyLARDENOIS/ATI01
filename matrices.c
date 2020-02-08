@@ -2,7 +2,7 @@
 #include <stdlib.h>
 
 typedef struct Matrice{
-	char nom [20];
+	char nom [20] ;
 	double** matrice;
     	int nb_ligne;
 	int nb_col;
@@ -47,7 +47,7 @@ Matrice create_matrice(){
 }
 
 
-void afficher_tab(Matrice *m){
+void afficher_matrice(Matrice *m){
 	  int i,j;
 	  printf("matrice %s:\n",m->nom);
 	  for (i=0;i<m->nb_ligne;i++){
@@ -60,12 +60,58 @@ void afficher_tab(Matrice *m){
 			    printf("\n");
 			      }
 }
+
+double** add_matrices(Matrice *m1, Matrice *m2){
+	//DEFINIR UNE EXCEPTION SI LES MATRICES NE SONT PAS DE MEME TAILLES
+	double** matrice;
+	matrice = create_tab(m1->nb_ligne,m1->nb_col);
+	int i,j;
+	for (i=0;i<m1->nb_ligne;i++){
+		for (j=0;j<m1->nb_col;j++){
+			matrice[i][j]= m1->matrice[i][j] + m2->matrice[i][j];
+		}
+	}
+	return matrice; 
+}
+
+double** sub_matrices(Matrice *m1, Matrice *m2){
+	//DEFINIR UNE EXCEPTION SI LES MATRICES NE SONT PAS DE MEME TAILLES
+	double** matrice;
+	matrice = create_tab(m1->nb_ligne,m1->nb_col);
+	int i,j;
+	for (i=0;i<m1->nb_ligne;i++){
+		for (j=0;j<m1->nb_col;j++){
+			matrice[i][j]= m1->matrice[i][j] - m2->matrice[i][j];
+		}
+	}
+	return matrice; 
+}
+
 /*---------------------------------------------------------------------------*/
 int main(){
-	Matrice m1;
+	Matrice m1,m2;
 	m1 = create_matrice();
-	afficher_tab(&m1);
-	delete_tab(&m1);
+	m2 = create_matrice();
+	
+	afficher_matrice(&m1);
+	afficher_matrice(&m2);
+	
+	Matrice msum;
+	sprintf(msum.nom,"somme"); // nsum.nom = "somme"
+	msum.nb_ligne= m1.nb_ligne;
+	msum.nb_col= m1.nb_col;
+	msum.matrice= add_matrices(&m1,&m2);
+	afficher_matrice(&msum);
+	
+	Matrice mdif;
+	sprintf(mdif.nom,"difference"); // nsum.nom = "difference"
+	mdif.nb_ligne= m1.nb_ligne;
+	mdif.nb_col= m1.nb_col;
+	mdif.matrice= sub_matrices(&m1,&m2);
+	afficher_matrice(&mdif);
 
+	delete_tab(&m1);
+	delete_tab(&m2);
+	
 	return 0;
 }
