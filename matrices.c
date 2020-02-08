@@ -9,21 +9,21 @@ typedef struct Matrice{
 } Matrice;
 /*--------------------------------------------------------*/
 double** create_tab (int nb_ligne, int nb_col ){
-	  double **T;
-	  int i;
-	  T = (double**) malloc(nb_ligne*sizeof(double*));
-	  for (i=0;i<nb_ligne;i++){
-	    T[i]= (double*)malloc(nb_col*sizeof(double));
-	    }
-		  return T;
+	double **T;
+	int i;
+	T = (double**) malloc(nb_ligne*sizeof(double*));
+	for (i=0;i<nb_ligne;i++){
+		T[i]= (double*)malloc(nb_col*sizeof(double));
+	}
+	return T;
 }
 
 void delete_tab (Matrice *m){
-	  int i;
-	  for (i=0;i<m->nb_ligne;i++){
+	int i;
+	for (i=0;i<m->nb_ligne;i++){
 		free(m->matrice[i]);
-			  }
-	      free(m->matrice);
+	}
+	free(m->matrice);
 }
 
 Matrice create_matrice(){
@@ -48,17 +48,17 @@ Matrice create_matrice(){
 
 
 void afficher_matrice(Matrice *m){
-	  int i,j;
-	  printf("matrice %s:\n",m->nom);
-	  for (i=0;i<m->nb_ligne;i++){
-		        for (j=0;j<m->nb_col;j++){
-				      printf("%lg",m->matrice[i][j]);
-				      if (j != m->nb_col-1){
-					      printf("\t;\t");
-					}
-		    	}
-			    printf("\n");
-			      }
+	int i,j;
+	printf("matrice %s:\n",m->nom);
+	for (i=0;i<m->nb_ligne;i++){
+		for (j=0;j<m->nb_col;j++){
+			printf("%lg",m->matrice[i][j]);
+		      	if (j != m->nb_col-1){
+			      printf("\t;\t");
+			}
+		}
+		printf("\n");
+	}
 }
 
 double** add_matrices(Matrice *m1, Matrice *m2){
@@ -95,20 +95,28 @@ int main(){
 	
 	afficher_matrice(&m1);
 	afficher_matrice(&m2);
-	
-	Matrice msum;
-	sprintf(msum.nom,"somme"); // nsum.nom = "somme"
-	msum.nb_ligne= m1.nb_ligne;
-	msum.nb_col= m1.nb_col;
-	msum.matrice= add_matrices(&m1,&m2);
-	afficher_matrice(&msum);
-	
-	Matrice mdif;
-	sprintf(mdif.nom,"difference"); // nsum.nom = "difference"
-	mdif.nb_ligne= m1.nb_ligne;
-	mdif.nb_col= m1.nb_col;
-	mdif.matrice= sub_matrices(&m1,&m2);
-	afficher_matrice(&mdif);
+	if (m1.nb_ligne == m2.nb_ligne && m1.nb_col == m2.nb_col){
+		Matrice msum;
+		sprintf(msum.nom,"somme"); // nsum.nom = "somme"
+		msum.nb_ligne= m1.nb_ligne;
+		msum.nb_col= m1.nb_col;
+		msum.matrice= add_matrices(&m1,&m2);
+		afficher_matrice(&msum);
+	}
+	else {
+		printf("Addition impossible\n");
+	}
+	if (m1.nb_ligne == m2.nb_ligne && m1.nb_col == m2.nb_col){
+		Matrice mdif;
+		sprintf(mdif.nom,"difference"); // nsum.nom = "difference"
+		mdif.nb_ligne= m1.nb_ligne;
+		mdif.nb_col= m1.nb_col;
+		mdif.matrice= sub_matrices(&m1,&m2);
+		afficher_matrice(&mdif);
+	}
+	else {
+		printf("Soustraction impossible\n");
+	}
 
 	delete_tab(&m1);
 	delete_tab(&m2);
