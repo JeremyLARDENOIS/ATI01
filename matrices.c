@@ -2,6 +2,7 @@
 #include <stdlib.h>
 
 typedef struct Matrice{
+	char* nom;
 	double** matrice;
     	int nb_ligne;
 	int nb_col;
@@ -25,8 +26,9 @@ void delete_tab(double** T, int nb_ligne, int nb_col){
 	      free(T);
 }
 
-void afficher_tab(double** tableau, int nb_ligne, int nb_col){
+void afficher_tab(char* nom,double** tableau, int nb_ligne, int nb_col){
 	  int i,j;
+	  printf("%s:\n",nom);
 	  for (i=0;i<nb_ligne;i++){
 		        for (j=0;j<nb_col;j++){
 				      printf("%lf;",tableau[i][j]);
@@ -35,7 +37,7 @@ void afficher_tab(double** tableau, int nb_ligne, int nb_col){
 			      }
 }
 int main(){
-	Matrice m1 = {create_tab(5,5),5,5};
+	Matrice m1 = {"matrice n°1",create_tab(5,5),5,5};
 		    /*//Decommenter pour avoir une matrice non-nul
 		     *   int i,j;
 		     *     for (i=0;i<nb_ligne;i++){
@@ -45,7 +47,7 @@ int main(){
 		     *                       printf("\n");
 		     *                         }
 		     *                           */
-	afficher_tab(m1.matrice,m1.nb_ligne,m1.nb_col);
+	afficher_tab(m1.nom,m1.matrice,m1.nb_ligne,m1.nb_col);
 
 	delete_tab(m1.matrice,m1.nb_ligne,m1.nb_col);
 
