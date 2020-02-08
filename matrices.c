@@ -10,28 +10,28 @@ typedef struct Matrice{
 
 double** create_tab (int nb_ligne, int nb_col ){
 	  double **T;
-	    int i;
-	      T = (double**) malloc(nb_ligne*sizeof(double*));
-	        for (i=0;i<nb_ligne;i++){
-			    T[i]= (double*)malloc(nb_col*sizeof(double));
-			      }
+	  int i;
+	  T = (double**) malloc(nb_ligne*sizeof(double*));
+	  for (i=0;i<nb_ligne;i++){
+	    T[i]= (double*)malloc(nb_col*sizeof(double));
+	    }
 		  return T;
 }
 
-void delete_tab(double** T, int nb_ligne, int nb_col){
+void delete_tab(Matrice *m){
 	  int i;
-	    for (i=0;i<nb_ligne;i++){
-		        free(T[i]);
+	  for (i=0;i<m->nb_ligne;i++){
+		free(m->matrice[i]);
 			  }
-	      free(T);
+	      free(m->matrice);
 }
 
-void afficher_tab(char* nom,double** tableau, int nb_ligne, int nb_col){
+void afficher_tab(Matrice *m){
 	  int i,j;
-	  printf("%s:\n",nom);
-	  for (i=0;i<nb_ligne;i++){
-		        for (j=0;j<nb_col;j++){
-				      printf("%lf;",tableau[i][j]);
+	  printf("%s:\n",m->nom);
+	  for (i=0;i<m->nb_ligne;i++){
+		        for (j=0;j<m->nb_col;j++){
+				      printf("%lf;",m->matrice[i][j]);
 				          }
 			    printf("\n");
 			      }
@@ -47,9 +47,9 @@ int main(){
 		     *                       printf("\n");
 		     *                         }
 		     *                           */
-	afficher_tab(m1.nom,m1.matrice,m1.nb_ligne,m1.nb_col);
+	afficher_tab(&m1);
 
-	delete_tab(m1.matrice,m1.nb_ligne,m1.nb_col);
+	delete_tab(&m1);
 
 		        return 0;
 }
