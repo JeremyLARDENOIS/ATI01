@@ -2,7 +2,7 @@
 #include <stdlib.h>
 
 typedef struct Matrice{
-	char* nom;
+	char nom [20];
 	double** matrice;
     	int nb_ligne;
 	int nb_col;
@@ -29,7 +29,7 @@ void delete_tab (Matrice *m){
 Matrice create_matrice(){
 	Matrice m;
 	printf("Donnez un nom a la matrice: ");
-	scanf("%s",&m.nom);
+	scanf("%s",m.nom);
 	printf("Quel est la dimension de la matrice %s (<nb_ligne>x<nb_col>) ?: ",m.nom);
 	scanf("%dx%d",&m.nb_ligne,&m.nb_col);
 	m.matrice = create_tab(m.nb_ligne,m.nb_col);
@@ -38,7 +38,7 @@ Matrice create_matrice(){
 	
 	for (i=0;i<m.nb_ligne;i++){
 	        for (j=0;j<m.nb_col;j++){
-			printf("%s [%d] [%d]",m.nom,i,j);      
+			printf("%s [%d] [%d]:",m.nom,i,j);      
 			scanf("%lf",&m.matrice[i][j]);
 		}
 	
@@ -49,11 +49,14 @@ Matrice create_matrice(){
 
 void afficher_tab(Matrice *m){
 	  int i,j;
-	  printf("%s:\n",m->nom);
+	  printf("matrice %s:\n",m->nom);
 	  for (i=0;i<m->nb_ligne;i++){
 		        for (j=0;j<m->nb_col;j++){
-				      printf("%lf;",m->matrice[i][j]);
-				          }
+				      printf("%lg",m->matrice[i][j]);
+				      if (j != m->nb_col-1){
+					      printf("\t;\t");
+					}
+		    	}
 			    printf("\n");
 			      }
 }
