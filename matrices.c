@@ -38,7 +38,7 @@ Matrice create_matrice(){
 	
 	for (i=0;i<m.nb_ligne;i++){
 	        for (j=0;j<m.nb_col;j++){
-			printf("%s [%d] [%d]:",m.nom,i,j);      
+			printf("%s [%d] [%d]:",m.nom,i+1,j+1);      
 			scanf("%lf",&m.matrice[i][j]);
 		}
 	
@@ -62,7 +62,6 @@ void afficher_matrice(Matrice *m){
 }
 
 double** add_matrices(Matrice *m1, Matrice *m2){
-	//DEFINIR UNE EXCEPTION SI LES MATRICES NE SONT PAS DE MEME TAILLES
 	double** matrice;
 	matrice = create_tab(m1->nb_ligne,m1->nb_col);
 	int i,j;
@@ -74,17 +73,30 @@ double** add_matrices(Matrice *m1, Matrice *m2){
 	return matrice; 
 }
 
-double** sub_matrices(Matrice *m1, Matrice *m2){
-	//DEFINIR UNE EXCEPTION SI LES MATRICES NE SONT PAS DE MEME TAILLES
-	double** matrice;
-	matrice = create_tab(m1->nb_ligne,m1->nb_col);
+
+double** mul_matrices(Matrice *m1, Matrice *m2){
+	double** mres;
+	mres = create_tab(m2->nb_ligne,m1->nb_col);
 	int i,j;
-	for (i=0;i<m1->nb_ligne;i++){
-		for (j=0;j<m1->nb_col;j++){
-			matrice[i][j]= m1->matrice[i][j] - m2->matrice[i][j];
+	int x,y; // variable de la position du résultat
+	i = 0;
+	j = 0;
+	x = 0;
+	y = 0;
+	for (x=0;x<m1->nb_ligne;x++){
+		for (y=0;y<m2->nb_col;y++){
+			while (i < m1->nb_col){
+				mres[x][y]=mres[x][y] + ( m1->matrice[x][j]*m2->matrice[y][j]);
+				printf("%lg\n",mres[x][y]);
+				i ++;
+				j ++;
+			}
+			printf("affectation\n");
+			i=0;
+			j=0;
 		}
 	}
-	return matrice; 
+	return mres; 
 }
 
 /*---------------------------------------------------------------------------*/
@@ -97,7 +109,7 @@ int main(){
 	afficher_matrice(&m2);
 	if (m1.nb_ligne == m2.nb_ligne && m1.nb_col == m2.nb_col){
 		Matrice msum;
-		sprintf(msum.nom,"somme"); // nsum.nom = "somme"
+		sprintf(msum.nom,"m1 + m2"); // nsum.nom = "m1 + m2"
 		msum.nb_ligne= m1.nb_ligne;
 		msum.nb_col= m1.nb_col;
 		msum.matrice= add_matrices(&m1,&m2);
@@ -106,18 +118,19 @@ int main(){
 	else {
 		printf("Addition impossible\n");
 	}
-	if (m1.nb_ligne == m2.nb_ligne && m1.nb_col == m2.nb_col){
-		Matrice mdif;
-		sprintf(mdif.nom,"difference"); // nsum.nom = "difference"
-		mdif.nb_ligne= m1.nb_ligne;
-		mdif.nb_col= m1.nb_col;
-		mdif.matrice= sub_matrices(&m1,&m2);
-		afficher_matrice(&mdif);
+
+	if (m1.nb_col == m2.nb_ligne) {
+		Matrice mmul;
+		sprintf(mmul.nom,"m1 * m2"); // nsum.nom = "m1 * m2"
+		mmul.nb_ligne= m1.nb_ligne;
+		mmul.nb_col= m2.nb_col;
+		mmul.matrice= mul_matrices(&m1,&m2);
+		afficher_matrice(&mmul);
 	}
 	else {
-		printf("Soustraction impossible\n");
+		printf("Multiplication impossible\n");
 	}
-
+	
 	delete_tab(&m1);
 	delete_tab(&m2);
 	
