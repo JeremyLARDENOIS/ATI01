@@ -33,19 +33,19 @@ int delete_tab (Matrice *m){
 
 int create_matrice(Matrice *m){
   //return NULL boucle tant que pas bon
-  Matrice m;
   printf("Donnez un nom a la matrice: ");
-  scanf("%s",m.nom);
-  printf("Quel est la dimension de la matrice %s (<nb_ligne>x<nb_col>) ?: ",m.nom);
-  scanf("%dx%d",&m.nb_ligne,&m.nb_col);
-  m.matrice = create_tab(m.matrice,m.nb_ligne,m.nb_col);
-  printf("Remplissons la matrice \"%s\" de taille %dx%d: \n",m.nom,m.nb_ligne,m.nb_col);
+  scanf("%s",m->nom);
+  printf("Quel est la dimension de la matrice %s (<nb_ligne>x<nb_col>) ?: ",m->nom);
+  scanf("%dx%d",&m->nb_ligne,&m->nb_col);
+  printf("Remplissons la matrice \"%s\" de taille %dx%d: \n",m->nom,m->nb_ligne,m->nb_col);
   int i,j;
-  
-  for (i=0;i<m.nb_ligne;i++){
-      for (j=0;j<m.nb_col;j++){
-      printf("%s [%d] [%d]:",m.nom,i+1,j+1);      
-      scanf("%lf",&m.matrice[i][j]);
+  //Création de la dimension de la matrice
+  create_tab(m->matrice,m->nb_ligne,m->nb_col);
+  //remplissage de la matrice
+  for (i=0;i<m->nb_ligne;i++){
+      for (j=0;j<m->nb_col;j++){
+ 	     printf("%s [%d] [%d]:",m->nom,i+1,j+1);      
+ 	     scanf("%lf",&m->matrice[i][j]);
       } 
   }
   return 0 ;
@@ -67,19 +67,16 @@ int afficher_matrice(Matrice *m){
 }
 
 int add_matrices(Matrice* mres, Matrice *m1, Matrice *m2){
-  matrice = create_tab(m1->nb_ligne,m1->nb_col);
   int i,j;
   for (i=0;i<mres->nb_ligne;i++){
     for (j=0;j<mres->nb_col;j++){
-      mres[i][j]= m1->matrice[i][j] + m2->matrice[i][j];
+      mres->matrice[i][j]= m1->matrice[i][j] + m2->matrice[i][j];
     }
   }
   return 0; 
 }
 
 int mul_matrices(Matrice* mres, Matrice *m1, Matrice *m2){
-  double** mres;
-  mres = create_tab(m2->nb_ligne,m1->nb_col);
   int i,j;
   int x,y; // variable de la position du résultat
   i = 0;
@@ -89,8 +86,8 @@ int mul_matrices(Matrice* mres, Matrice *m1, Matrice *m2){
   for (x=0;x<m1->nb_ligne;x++){
     for (y=0;y<m2->nb_col;y++){
       while (i < m1->nb_col){
-        mres[x][y]=mres[x][y] + ( m1->matrice[x][j]*m2->matrice[i][y]);
-        printf("%lg\n",mres[x][y]);
+        mres->matrice[x][y]+= ( m1->matrice[x][j]*m2->matrice[i][y]);
+        printf("%lg\n",mres->matrice[x][y]);
         i ++;
         j ++;
       }
@@ -119,6 +116,7 @@ double det_matrice(Matrice *m){
 /*---------------------------------------------------------------------------*/
 int main(){
   Matrice m1,m2;
+  
   create_matrice(&m1);
   create_matrice(&m2);
   
