@@ -1,53 +1,57 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-typedef struct Matrice{
+struct S_Matrice{
   char nom [20] ;
   double** matrice;
-      int nb_ligne;
+  int nb_ligne;
   int nb_col;
-} Matrice;
+};
+
+typedef struct S_Matrice Matrice ;
+
 /*--------------------------------------------------------*/
-double** create_tab (int nb_ligne, int nb_col ){
-  double **T;
+
+int create_tab (double** T,int nb_ligne, int nb_col ){
   int i;
   T = (double**) malloc(nb_ligne*sizeof(double*));
   for (i=0;i<nb_ligne;i++){
     T[i]= (double*)malloc(nb_col*sizeof(double));
   }
-  return T;
+  return 0;
 }
 
-void delete_tab (Matrice *m){
+int delete_tab (Matrice *m){
   int i;
   for (i=0;i<m->nb_ligne;i++){
     free(m->matrice[i]);
   }
   free(m->matrice);
+  free(m);
+  return 0;
 }
 
-Matrice create_matrice(){
+int create_matrice(Matrice *m){
+  //return NULL boucle tant que pas bon
   Matrice m;
   printf("Donnez un nom a la matrice: ");
   scanf("%s",m.nom);
   printf("Quel est la dimension de la matrice %s (<nb_ligne>x<nb_col>) ?: ",m.nom);
   scanf("%dx%d",&m.nb_ligne,&m.nb_col);
-  m.matrice = create_tab(m.nb_ligne,m.nb_col);
+  m.matrice = create_tab(m.matrice,m.nb_ligne,m.nb_col);
   printf("Remplissons la matrice \"%s\" de taille %dx%d: \n",m.nom,m.nb_ligne,m.nb_col);
   int i,j;
   
   for (i=0;i<m.nb_ligne;i++){
-          for (j=0;j<m.nb_col;j++){
+      for (j=0;j<m.nb_col;j++){
       printf("%s [%d] [%d]:",m.nom,i+1,j+1);      
       scanf("%lf",&m.matrice[i][j]);
-    }
-  
-    }
-    return m ;
+      } 
+  }
+  return 0 ;
 }
 
-
-void afficher_matrice(Matrice *m){
+int afficher_matrice(Matrice *m){
   int i,j;
   printf("matrice %s:\n",m->nom);
   for (i=0;i<m->nb_ligne;i++){
@@ -59,22 +63,21 @@ void afficher_matrice(Matrice *m){
     }
     printf("\n");
   }
+  return 0;
 }
 
-double** add_matrices(Matrice *m1, Matrice *m2){
-  double** matrice;
+int add_matrices(Matrice* mres, Matrice *m1, Matrice *m2){
   matrice = create_tab(m1->nb_ligne,m1->nb_col);
   int i,j;
-  for (i=0;i<m1->nb_ligne;i++){
-    for (j=0;j<m1->nb_col;j++){
-      matrice[i][j]= m1->matrice[i][j] + m2->matrice[i][j];
+  for (i=0;i<mres->nb_ligne;i++){
+    for (j=0;j<mres->nb_col;j++){
+      mres[i][j]= m1->matrice[i][j] + m2->matrice[i][j];
     }
   }
-  return matrice; 
+  return 0; 
 }
 
-
-double** mul_matrices(Matrice *m1, Matrice *m2){
+int mul_matrices(Matrice* mres, Matrice *m1, Matrice *m2){
   double** mres;
   mres = create_tab(m2->nb_ligne,m1->nb_col);
   int i,j;
@@ -96,9 +99,13 @@ double** mul_matrices(Matrice *m1, Matrice *m2){
       j=0;
     }
   }
-  return mres; 
+  return 0; 
 }
 
+int trace_matrice(Matrice* m){
+  return 0;
+}
+/*
 double det_matrice(Matrice *m){
   double det;
   switch(m->nb_ligne){
@@ -108,16 +115,16 @@ double det_matrice(Matrice *m){
   
   return det;
 }
-
+*/
 /*---------------------------------------------------------------------------*/
 int main(){
   Matrice m1,m2;
-  m1 = create_matrice();
-  m2 = create_matrice();
+  create_matrice(&m1);
+  create_matrice(&m2);
   
   afficher_matrice(&m1);
   afficher_matrice(&m2);
-  
+  /*
   if (m1.nb_ligne == m2.nb_ligne && m1.nb_col == m2.nb_col){
     Matrice msum;
     sprintf(msum.nom,"m1 + m2"); // nsum.nom = "m1 + m2"
@@ -128,8 +135,8 @@ int main(){
   }
   else {
     printf("Addition impossible\n");
+  
   }
-
   if (m1.nb_col == m2.nb_ligne) {
     Matrice mmul;
     sprintf(mmul.nom,"m1 * m2"); // nsum.nom = "m1 * m2"
@@ -141,16 +148,27 @@ int main(){
   else {
     printf("Multiplication impossible\n");
   }
-  
+
   if (m1.nb_ligne == m1.nb_col){
     double det_m1;
     det_m1 = det_matrice(&m1);
     printf("%lg\n",det_m1);
   }
   else{
-    printf("determinant %s impossible\n")
+    printf("trace et determinant de la matrice %s impossible\n",m1.nom);
   }
-  
+*/
+
+/*  
+  if (m1.nb_ligne == m1.nb_col){
+    double det_m1;
+    det_m1 = det_matrice(&m1);
+    printf("%lg\n",det_m1);
+  }
+  else{
+    printf("determinant %s impossible\n");
+  }
+*/  
   delete_tab(&m1);
   delete_tab(&m2);
   
