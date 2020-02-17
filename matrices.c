@@ -12,11 +12,11 @@ typedef struct S_Matrice Matrice ;
 
 /*--------------------------------------------------------*/
 
-int create_tab (double** T,int nb_ligne, int nb_col ){
+int create_tab (Matrice* m ){
   int i;
-  T = (double**) malloc(nb_ligne*sizeof(double*));
-  for (i=0;i<nb_ligne;i++){
-    T[i]= (double*)malloc(nb_col*sizeof(double));
+  *m->matrice = (double**) malloc(m->nb_ligne*sizeof(double*));
+  for (i=0;i<m->nb_ligne;i++){
+    m->matrice[i]= (double*)malloc(m->nb_col*sizeof(double));
   }
   return 0;
 }
@@ -31,27 +31,30 @@ int delete_tab (Matrice *m){
   return 0;
 }
 
-int create_matrice(Matrice *m){
+int create_matrice(Matrice* m){
   //return NULL boucle tant que pas bon
   printf("Donnez un nom a la matrice: ");
-  scanf("%s",m->nom);
+  scanf("%s",&m->nom);
   printf("Quel est la dimension de la matrice %s (<nb_ligne>x<nb_col>) ?: ",m->nom);
   scanf("%dx%d",&m->nb_ligne,&m->nb_col);
   printf("Remplissons la matrice \"%s\" de taille %dx%d: \n",m->nom,m->nb_ligne,m->nb_col);
   int i,j;
   //Création de la dimension de la matrice
-  create_tab(m->matrice,m->nb_ligne,m->nb_col);
+  create_tab(&m);
   //remplissage de la matrice
+  /*
   for (i=0;i<m->nb_ligne;i++){
-      for (j=0;j<m->nb_col;j++){
- 	     printf("%s [%d] [%d]:",m->nom,i+1,j+1);      
- 	     scanf("%lf",&m->matrice[i][j]);
+     for (j=0;j<m->nb_col;j++){
+        //printf("%s [%d] [%d]:",m->nom,i+1,j+1);      
+        //scanf("%lf",&m->matrice[i][j]);
       } 
   }
+  */
+  
   return 0 ;
 }
 
-int afficher_matrice(Matrice *m){
+int afficher_matrice(Matrice* m){
   int i,j;
   printf("matrice %s:\n",m->nom);
   for (i=0;i<m->nb_ligne;i++){
@@ -113,15 +116,23 @@ double det_matrice(Matrice *m){
   return det;
 }
 */
+  
+int give_nbl(Matrice* m)  {
+  scanf("%d",&m->nb_ligne);
+  
+  return 0;
+}
 /*---------------------------------------------------------------------------*/
 int main(){
-  Matrice m1,m2;
-  
+ Matrice m1,m2;
+
   create_matrice(&m1);
-  create_matrice(&m2);
+  //create_matrice(&m2);
   
-  afficher_matrice(&m1);
-  afficher_matrice(&m2);
+  printf("%s : %dx%d",m1.nom,m1.nb_ligne,m1.nb_col);
+  //afficher_matrice(&m1);
+  //afficher_matrice(&m2);
+  
   /*
   if (m1.nb_ligne == m2.nb_ligne && m1.nb_col == m2.nb_col){
     Matrice msum;
@@ -167,8 +178,8 @@ int main(){
     printf("determinant %s impossible\n");
   }
 */  
-  delete_tab(&m1);
-  delete_tab(&m2);
+  //delete_tab(&m1);
+  //delete_tab(&m2);
   
   return 0;
 }
