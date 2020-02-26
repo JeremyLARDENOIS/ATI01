@@ -122,7 +122,7 @@ int give_nbl(Matrice* m)  {
 }
 /*---------------------------------------------------------------------------*/
 int main(){
- Matrice m1,m2;
+  Matrice m1,m2;
 
   create_matrice(&m1);
   create_matrice(&m2);
@@ -136,19 +136,18 @@ int main(){
     sprintf(msum.nom,"m1 + m2"); // nsum.nom = "m1 + m2"
     msum.nb_ligne= m1.nb_ligne;
     msum.nb_col= m1.nb_col;
-    msum.matrice= add_matrices(&m1,&m2);
+    add_matrices(&msum,&m1,&m2);
     afficher_matrice(&msum);
   }
   else {
     printf("Addition impossible\n");
-  
   }
   if (m1.nb_col == m2.nb_ligne) {
     Matrice mmul;
     sprintf(mmul.nom,"m1 * m2"); // nsum.nom = "m1 * m2"
     mmul.nb_ligne= m1.nb_ligne;
     mmul.nb_col= m2.nb_col;
-    mmul.matrice= mul_matrices(&m1,&m2);
+    mmul_matrices(&mmul,&m1,&m2);
     afficher_matrice(&mmul);
   }
   else {
@@ -176,7 +175,7 @@ int main(){
   }
 */  
   delete_tab(&m1);
-  //delete_tab(&m2);
+  delete_tab(&m2);
   
   return 0;
 }
