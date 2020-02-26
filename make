@@ -88,9 +88,11 @@ int mul_matrices(Matrice* mres, Matrice *m1, Matrice *m2){
     for (y=0;y<m2->nb_col;y++){
       while (i < m1->nb_col){
         mres->matrice[x][y]+= ( m1->matrice[x][j]*m2->matrice[i][y]);
+        printf("%lg\n",mres->matrice[x][y]);
         i ++;
         j ++;
       }
+      printf("affectation\n");
       i=0;
       j=0;
     }
@@ -129,7 +131,6 @@ int main(){
     sprintf(msum.nom,"m1 + m2"); /* nsum.nom = "m1 + m2" , affecte un nom a la matrice */
     msum.nb_ligne= m1.nb_ligne;
     msum.nb_col= m1.nb_col;
-    create_tab(&msum);
     add_matrices(&msum,&m1,&m2);
     afficher_matrice(&msum);
   }
@@ -142,9 +143,7 @@ int main(){
     sprintf(mmul.nom,"m1 * m2"); // nsum.nom = "m1 * m2"
     mmul.nb_ligne= m1.nb_ligne;
     mmul.nb_col= m2.nb_col;
-    create_tab(&mmul);
-    
-    mul_matrices(&mmul,&m1,&m2);
+    mmul.matrice(&mmul,&m1,&m2);
     afficher_matrice(&mmul);
   }
   else {
