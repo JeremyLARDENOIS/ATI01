@@ -98,7 +98,14 @@ int mul_matrices(Matrice* mres, Matrice *m1, Matrice *m2){
   return 0; 
 }
 
-int trace_matrice(Matrice* m){
+int trace_matrice(Matrice* m, double* trace){
+  int i;
+  for (i=0;i>m->nb_col;i++){
+  	printf ("%lg",m->matrice[i][i]);
+	*trace = *trace + m->matrice[i][i];
+  }
+
+
   return 0;
 }
 /*
@@ -150,17 +157,19 @@ int main(){
   else {
     printf("Multiplication impossible\n");
   }
-/*
+
   if (m1.nb_ligne == m1.nb_col){
-    double det_m1;
-    det_m1 = det_matrice(&m1);
-    printf("%lg\n",det_m1);
+    double t_m1;
+    t_m1 = 0;
+
+    trace_matrice(&m1,&t_m1);
+    printf("trace m1 : %lg\n",t_m1);
   }
   else{
-    printf("trace et determinant de la matrice %s impossible\n",m1.nom);
+    printf("trace de la matrice %s impossible\n",m1.nom);
   }
 
-*/
+
 /*  
   if (m1.nb_ligne == m1.nb_col){
     double det_m1;
