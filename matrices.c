@@ -102,7 +102,7 @@ int trace_matrice(Matrice* m, double* trace){
   int i;
   *trace = 0;
   for (i=0;i<m->nb_col;i++){
-	*trace = *trace + m->matrice[i][i];
+  *trace = *trace + m->matrice[i][i];
   }
 
   return 0;
@@ -110,43 +110,47 @@ int trace_matrice(Matrice* m, double* trace){
 
 int det_matrice(Matrice *m, double* det){
   if (m->nb_col != m->nb_ligne){
-	return 1; /*determinant impossible*/
+  return 1; /*determinant impossible*/
   }
   if (m->nb_ligne == 2){
-	/*Formule de determinant de matrice*/
-	*det = m->matrice[0][0] * m->matrice[1][1] - m->matrice[0][1] * m->matrice [1][0];
+  /*Formule de determinant de matrice*/
+  *det = m->matrice[0][0] * m->matrice[1][1] - m->matrice[0][1] * m->matrice [1][0];
   }
   else {
-	int x;
-	Matrice mdet;
-	mdet.nb_col = mdet.nb_ligne = m->nb_ligne - 1 ;
-	create_tab(&mdet);
-	for (x=0;x < m->nb_ligne;x++){
-		int i;
-		int j;
-		double det_mdet;
-		/*On remplit la matrice du determinant*/
-		for (i = 0;i<mdet.nb_ligne;i++){
-			for (j=1;j<mdet.nb_col;j++){
-				if (x < i){
-					printf("",mdet.matrice[i][j],m->matrice[i][j-1]);
-					mdet.matrice[i][j] = m->matrice[i][j-1];
-				}
-				if (x > i){
-					mdet.matrice[i][j] = m->matrice[i-1][j-1];
-				}
-			}	
-		}
-		det_mdet = 0;
-		afficher_matrice(&mdet);
-		det_matrice(&mdet,&det_mdet);
-		if (x%2 == 0){ /*Si c'est un numero de ligne impair (on commence a 1 en matrice mais a 0 en code)*/ 
-			*det = *det + det_mdet;
-		}
-		if (x%2 != 0){ /*Si c'est un numero de ligne pair*/
-			*det = *det - det_mdet;
-		}
-	}
+  int x;
+  Matrice mdet;
+  mdet.nb_col = mdet.nb_ligne = m->nb_ligne - 1 ;
+  create_tab(&mdet);
+  for (x=0;x < m->nb_ligne;x++){
+    int i;
+    int j;
+    double det_mdet;
+    /*On remplit la matrice du determinant*/
+    for (i = 0;i<m->nb_ligne;i++){
+      for (j=1;j<m->nb_col;j++){
+        //printf("%d:%d\n",i,j);
+        if (i < x){
+          //printf("i<x %d;%d : %lg \n",i,j,m->matrice[i][j]);
+          mdet.matrice[i][j-1] = m->matrice[i][j];
+        }
+        if (i > x){
+          //printf("i>x %d;%d:%lg \n",i,j,m->matrice[i][j]);
+          mdet.matrice[i-1][j-1] = m->matrice[i][j];
+        }
+      }  
+    }
+    det_mdet = 0;
+    afficher_matrice(&mdet);
+       
+    det_matrice(&mdet,&det_mdet);
+    if (x%2 == 0){ //Si c'est un numero de ligne impair (on commence a 1 en matrice mais a 0 en code) 
+      *det = *det + det_mdet;
+    }
+    if (x%2 != 0){ //Si c'est un numero de ligne pair
+      *det = *det - det_mdet;
+    }
+     
+  }
   }
   return 0;
 }
