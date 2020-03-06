@@ -22,7 +22,7 @@ int create_tab(Matrice * m)
     return 0;
 }
 
-int delete_tab(Matrice * m)
+int delete_tab(Matrice* m)
 {
     int i;
     for (i = 0; i < m->nb_ligne; i++) {
@@ -58,7 +58,7 @@ int create_matrice(Matrice * m)
     return 0;
 }
 
-int afficher_matrice(Matrice * m)
+int afficher_matrice(Matrice* m)
 {
     int i, j;
     printf("matrice %s:\n", m->nom);
@@ -76,6 +76,9 @@ int afficher_matrice(Matrice * m)
 
 int add_matrices(Matrice * mres, Matrice * m1, Matrice * m2)
 {
+    if ((mres->nb_col != mres-> nb_ligne)||(m1-> nb_col != m1 -> nb_ligne)||(m2 -> nb_col != m2-> nb_ligne )||(mres->nb_col!=m1->nb_col)||(m1->nb_col!=m2->nb_col)){
+	return 1;
+	}
     int i, j;
     for (i = 0; i < mres->nb_ligne; i++) {
 	for (j = 0; j < mres->nb_col; j++) {
@@ -87,6 +90,9 @@ int add_matrices(Matrice * mres, Matrice * m1, Matrice * m2)
 
 int mul_matrices(Matrice * mres, Matrice * m1, Matrice * m2)
 {
+    if ((m1-> nb_col != m2 -> nb_ligne)||(mres->nb_ligne!=m1->nb_ligne)||(mres->nb_col!=m2->nb_col)){
+	return 1;
+	}
     int i, j;
     int x, y;			// variable de la position du résultat
     i = 0;
@@ -108,8 +114,11 @@ int mul_matrices(Matrice * mres, Matrice * m1, Matrice * m2)
     return 0;
 }
 
-int trace_matrice(Matrice * m, double *trace)
+int trace_matrice(Matrice * m, double * trace)
 {
+    if (m->nb_col != m->nb_ligne) { /* Problème de dimension de la matrice */
+        return 1;
+    }
     int i;
     *trace = 0;
     for (i = 0; i < m->nb_col; i++) {
@@ -119,10 +128,10 @@ int trace_matrice(Matrice * m, double *trace)
     return 0;
 }
 
-int det_matrice(Matrice * m, double *det)
+int det_matrice(Matrice * m, double * det)
 {
-    if (m->nb_col != m->nb_ligne) {
-	return 1;		/*determinant impossible */
+    if (m->nb_col != m->nb_ligne) { /* Problème de dimension de la matrice */
+        return 1;
     }
     if (m->nb_ligne == 2) {
 	/*Formule de determinant de matrice */
@@ -163,8 +172,8 @@ int det_matrice(Matrice * m, double *det)
 	    if (x % 2 != 0) {	//Si c'est un numero de ligne pair
 		*det = *det - det_mdet;
 	    }
-
 	}
+	delete_tab (&mdet);
     }
     return 0;
 }
@@ -181,67 +190,64 @@ int main()
     afficher_matrice(&m2);
 
     /*addition de m1 et m2 */
-    if (m1.nb_ligne == m2.nb_ligne && m1.nb_col == m2.nb_col) {
 	Matrice msum;		/*Matrice résultat de la somme */
-	sprintf(msum.nom, "m1 + m2");	/* nsum.nom = "m1 + m2" , affecte un nom a la matrice */
+	sprintf(msum.nom, "%s+%s",m1.nom,m2.nom);	/* msum.nom = "m1 + m2" , affecte un nom a la matrice */
 	msum.nb_ligne = m1.nb_ligne;
 	msum.nb_col = m1.nb_col;
 	create_tab(&msum);
-	add_matrices(&msum, &m1, &m2);
-	afficher_matrice(&msum);
+	if (add_matrices(&msum, &m1, &m2)){;
+		printf("Addition impossible\n");
     } else {
-	printf("Addition impossible\n");
+		afficher_matrice(&msum);
     }
+	delete_tab(&msum);
 
-    if (m1.nb_col == m2.nb_ligne) {
+	/*multiplication de m1 et m2*/
 	Matrice mmul;
-	sprintf(mmul.nom, "m1 * m2");	// nsum.nom = "m1 * m2"
+	sprintf(mmul.nom,"%s*%s",m1.nom,m2.nom);	// nsum.nom = "m1 * m2"
 	mmul.nb_ligne = m1.nb_ligne;
 	mmul.nb_col = m2.nb_col;
 	create_tab(&mmul);
-
-	mul_matrices(&mmul, &m1, &m2);
-	afficher_matrice(&mmul);
+	if (add_matrices(&mmul, &m1, &m2)){;
+		printf("Multiplication impossible\n");
     } else {
-	printf("Multiplication impossible\n");
+		afficher_matrice(&mmul);
     }
+	delete_tab(&mmul);
 
-    if (m1.nb_ligne == m1.nb_col) {
+	/*Trace de m1*/
 	double t_m1;
-	t_m1 = 0;
-
-	trace_matrice(&m1, &t_m1);
-	printf("trace m1 : %lg\n", t_m1);
+	if (trace_matrice(&m1,&t_m1)){
+		printf("Trace impossible\n");
     } else {
-	printf("trace de la matrice %s impossible\n", m1.nom);
+		printf("Trace %s: %lg\n", m1.nom,t_m1);
     }
-
-    if (m2.nb_ligne == m2.nb_col) {
+	
+	/*Trace de m2*/
 	double t_m2;
-	t_m2 = 0;
-
-	trace_matrice(&m2, &t_m2);
-	printf("trace m2 : %lg\n", t_m2);
+	if (trace_matrice(&m2,&t_m2)){
+		printf("Trace impossible\n");
     } else {
-	printf("trace de la matrice %s impossible\n", m2.nom);
+		printf("Trace %s: %lg\n", m2.nom,t_m2);
     }
 
-    if (m1.nb_ligne == m1.nb_col) {
+	/*Determinant de m1*/
 	double det_m1;
-	det_m1 = 0;
-	det_matrice(&m1, &det_m1);
-	printf("determinant de %s = %lg\n", m1.nom, det_m1);
+	det_m1=0;
+	if (det_matrice(&m1,&det_m1)){
+		printf("Determinant impossible\n");
     } else {
-	printf("determinant %s impossible\n", m1.nom);
+		printf("Determinant %s: %lg\n", m1.nom,det_m1);
     }
 
-    if (m2.nb_ligne == m2.nb_col) {
+
+	/*Determinant de m2*/
 	double det_m2;
-	det_m2 = 0;
-	det_matrice(&m2, &det_m2);
-	printf("determinant de %s = %lg\n", m2.nom, det_m2);
+	det_m2=0;
+	if (det_matrice(&m2,&det_m2)){
+		printf("Determinant impossible\n");
     } else {
-	printf("determinant %s impossible\n", m2.nom);
+		printf("Determinant %s: %lg\n", m2.nom,det_m2);
     }
 
     delete_tab(&m1);
