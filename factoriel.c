@@ -5,22 +5,25 @@
 
 int fact_it (int factoriel, int* res){
 	int i;
-	*res = 0;
+	*res = 1;
 	
-	for (i=0;i<=factoriel;i++){
-		*res = *res * factoriel;
+	for (i=1;i<=factoriel;i++){
+		*res = *res * i;
 	}
 
 	return 0;
 }
 
 int fact_rec (int factoriel, int* res){
-	*res = 0;
+	if (factoriel > 1){
+	  *res = factoriel * (*res);
+	  factoriel = factoriel - 1;
+	  fact_rec (factoriel,res);
+	}
 
 
 	return 0;
 }
-
 
 /*---------------Main-------------------*/
 
@@ -30,10 +33,12 @@ int main (){
 	scanf("%d",&factoriel);
 	
 	fact_it (factoriel, &resultat);
-	printf ("%d!=%d\n",factoriel,resultat);
+	printf ("De façon itérative : %d! = %d\n",factoriel,resultat);
 
+   resultat=1;
 	fact_rec(factoriel, &resultat);
-	printf ("%d!=%d\n",factoriel,resultat);
+	printf ("De façon récursive : %d! = %d\n",factoriel,resultat);
 
-	return 0;
+  return 0;
+  
 }
