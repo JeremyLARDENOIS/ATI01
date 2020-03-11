@@ -14,6 +14,7 @@ typedef struct S_Matrice Matrice;
 
 int create_tab(Matrice * m)
 {
+	/*Crée un tableau dynamique*/
     int i;
     m->matrice = (double **) malloc(m->nb_ligne * sizeof(double *));
     for (i = 0; i < m->nb_ligne; i++) {
