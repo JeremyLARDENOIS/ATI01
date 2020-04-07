@@ -2,7 +2,7 @@ CC = gcc
 CFLAGS = -Wall
 LDFLAGS = 
 
-all: matrices factoriel polynomes
+all: matrices factoriel polynomes resolv
 
 clean:
 	rm *.o &2>/dev/null
@@ -17,7 +17,10 @@ matrices: matrices.o
 factoriel: factoriel.o
 	$(CC) -o $@ $^ $(LDFLAGS)
 
-polynome: polynomes.o
+polynomes: polynomes.o
+	$(CC) -o $@ $^ $(LDFLAGS)
+
+resolv: resolv.o
 	$(CC) -o $@ $^ $(LDFLAGS)
 
 %.o: %.c
