@@ -24,14 +24,15 @@ int create_tab(Poly * p)
 
 int delete_tab(Poly * p)
 {
+    /*Supprime un tableau dynamique*/
     free(p->poly);
     return 0;
 }
 
 int copy_poly(Poly p1, Poly* p2)
 {
-	//p1 copié vers p2
-	int i;
+    //p1 copié vers p2
+    int i;
     p2->degre = p1.degre;
     p2->poly = (double *) realloc(p2->poly, (p1.degre + 1) * sizeof(double));
 	for (i=0; i <= p2->degre;i++){
@@ -43,17 +44,19 @@ int copy_poly(Poly p1, Poly* p2)
 
 int verify_poly(Poly * p)
 {
-    while ((p->poly[p->degre] == 0) && (p->degre > 0)) {
+    //Vérifie le degré réel d'un polynome et réajuste son degré si le coefficient du plus grand degre = 0
+    if ((p->poly[p->degre] == 0) && (p->degre > 0)) {
 	p->degre--;
+    	p->poly = (double *) realloc(p->poly, (p->degre + 1) * sizeof(double));
+	verify_poly(p);
     }
 
-    p->poly = (double *) realloc(p->poly, (p->degre + 1) * sizeof(double));
     return 0;
 }
 
 int create_poly(Poly * p)
 {
-    //return NULL boucle tant que pas bon
+    //Genere un polynome
     printf("Quel est le degre du polynome ? : ");
     scanf("%d", &p->degre);
     printf("Remplissons le polynome de degre %d\n", p->degre);
@@ -71,7 +74,8 @@ int create_poly(Poly * p)
 
 int print_poly(Poly p)
 {
-    int i;
+    //Affiche un polynome
+    int i; 			//Effectue l'iteration decroissante des degre du polynome
     int first_number;
     first_number = 1;		//Si le premier nombre est passé, on rajoute le signe devant
 
@@ -102,7 +106,8 @@ int print_poly(Poly p)
 		printf("x");
 	    }
 	    first_number = 0;	//On sait donc que le prochain n'est pas le premier nombre
-	} else {
+	}
+        if ((i==0)&&(first_number)) { //Si il s'agit d'un polynome = 0
 		printf("0");
 	}
 
@@ -115,6 +120,7 @@ int print_poly(Poly p)
 
 int eval_poly(Poly p, double x, double *res)
 {
+    //Evalue un polynome et stocke le resultat dans res
     int i;
     *res = 0;
 
@@ -127,9 +133,14 @@ int eval_poly(Poly p, double x, double *res)
 
 int derive(Poly p, Poly * p_dx)
 {
+    //Effectue la dérivé de p et stocke le résultat dans p_dx
     int i;
 
-    p_dx->degre = p.degre - 1;
+    if (p.degre > 0){
+    	p_dx->degre = p.degre - 1;
+    } if (p.degre == 0 ){
+    	p_dx->degre = p.degre;
+    }
     create_tab(p_dx);
 
     for (i = 0; i <= p_dx->degre; i++) {

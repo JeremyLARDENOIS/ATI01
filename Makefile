@@ -1,6 +1,6 @@
 CC = gcc
 CFLAGS = -Wall
-LDFLAGS = 
+LDFLAGS = -lm 
 
 all: matrices factoriel polynomes resolv
 
