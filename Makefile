@@ -10,6 +10,8 @@ clean:
 	rm matrices &2>/dev/null
 	rm factoriel &2>/dev/null
 	rm polynomes &2>/dev/null
+	rm resolv &2>/dev/null
+	exit 0
 
 matrices: matrices.o
 	$(CC) -o $@ $^ $(LDFLAGS)
