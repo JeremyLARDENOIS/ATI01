@@ -25,7 +25,7 @@ int create_tab(Matrice * m)
 
 int delete_tab(Matrice * m)
 {
-    /*Supprime un tableau dynamique*/
+    /*Supprime un tableau dynamique */
     int i;
     for (i = 0; i < m->nb_ligne; i++) {
 	free(m->matrice[i]);
@@ -62,7 +62,7 @@ int create_matrice(Matrice * m)
 
 int afficher_matrice(Matrice m)
 {
-//Affiche la matrice	
+//Affiche la matrice    
     int i, j;
     printf("matrice %s:\n", m.nom);
     for (i = 0; i < m.nb_ligne; i++) {

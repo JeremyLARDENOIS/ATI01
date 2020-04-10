@@ -1,3 +1,3 @@
 #!/bin/bash
-make clean &2> /dev/null 
+make clean 
 git add * && git commit -m "$*" && git push

@@ -24,36 +24,41 @@ int create_tab(Poly * p)
 
 int delete_tab(Poly * p)
 {
+    /*Supprime un tableau dynamique */
     free(p->poly);
     return 0;
 }
 
-int copy_poly(Poly p1, Poly* p2)
+int copy_poly(Poly p1, Poly * p2)
 {
-	//p1 copié vers p2
-	int i;
+    //p1 copié vers p2
+    int i;
     p2->degre = p1.degre;
-    p2->poly = (double *) realloc(p2->poly, (p1.degre + 1) * sizeof(double));
-	for (i=0; i <= p2->degre;i++){
-		p2->poly[i]= p1.poly[i];
-	}
+    p2->poly =
+	(double *) realloc(p2->poly, (p1.degre + 1) * sizeof(double));
+    for (i = 0; i <= p2->degre; i++) {
+	p2->poly[i] = p1.poly[i];
+    }
 
     return 0;
 }
 
 int verify_poly(Poly * p)
 {
-    while ((p->poly[p->degre] == 0) && (p->degre > 0)) {
+    //Vérifie le degré réel d'un polynome et réajuste son degré si le coefficient du plus grand degre = 0
+    if ((p->poly[p->degre] == 0) && (p->degre > 0)) {
 	p->degre--;
+	p->poly =
+	    (double *) realloc(p->poly, (p->degre + 1) * sizeof(double));
+	verify_poly(p);
     }
 
-    p->poly = (double *) realloc(p->poly, (p->degre + 1) * sizeof(double));
     return 0;
 }
 
 int create_poly(Poly * p)
 {
-    //return NULL boucle tant que pas bon
+    //Genere un polynome
     printf("Quel est le degre du polynome ? : ");
     scanf("%d", &p->degre);
     printf("Remplissons le polynome de degre %d\n", p->degre);
@@ -71,7 +76,8 @@ int create_poly(Poly * p)
 
 int print_poly(Poly p)
 {
-    int i;
+    //Affiche un polynome
+    int i;			//Effectue l'iteration decroissante des degre du polynome
     int first_number;
     first_number = 1;		//Si le premier nombre est passé, on rajoute le signe devant
 
@@ -79,7 +85,7 @@ int print_poly(Poly p)
     printf("f(x) = ");
 
     for (i = p.degre; i >= 0; i--) {
-	if ((p.poly[i] != 0)||((i==0)&&(!first_number))) {	//si le coefficient est différent de 0 ou n'est pas de degré 0 egale a 0
+	if ((p.poly[i] != 0) || ((i == 0) && (!first_number))) {	//si le coefficient est différent de 0 ou n'est pas de degré 0 egale a 0
 	    if (p.poly[i] > 0) {	//Si le coefficient est positif
 		if (!first_number) {	// Si ce n'est pas le premier nombre
 		    printf(" + ");
@@ -102,8 +108,9 @@ int print_poly(Poly p)
 		printf("x");
 	    }
 	    first_number = 0;	//On sait donc que le prochain n'est pas le premier nombre
-	} else {
-		printf("0");
+	}
+	if ((i == 0) && (first_number)) {	//Si il s'agit d'un polynome = 0
+	    printf("0");
 	}
 
     }
@@ -115,6 +122,7 @@ int print_poly(Poly p)
 
 int eval_poly(Poly p, double x, double *res)
 {
+    //Evalue un polynome et stocke le resultat dans res
     int i;
     *res = 0;
 
@@ -127,9 +135,15 @@ int eval_poly(Poly p, double x, double *res)
 
 int derive(Poly p, Poly * p_dx)
 {
+    //Effectue la dérivé de p et stocke le résultat dans p_dx
     int i;
 
-    p_dx->degre = p.degre - 1;
+    if (p.degre > 0) {
+	p_dx->degre = p.degre - 1;
+    }
+    if (p.degre == 0) {
+	p_dx->degre = p.degre;
+    }
     create_tab(p_dx);
 
     for (i = 0; i <= p_dx->degre; i++) {
@@ -140,6 +154,7 @@ int derive(Poly p, Poly * p_dx)
 
 int add_poly(Poly p1, Poly p2, Poly * psum)
 {
+    //Additionne p1 et p2 et stocke le résultat dans psum
     int i;
 
     psum->degre = (p1.degre >= p2.degre ? p1.degre : p2.degre);	// renvoie le degré max
@@ -157,6 +172,7 @@ int add_poly(Poly p1, Poly p2, Poly * psum)
 
 int sub_poly(Poly p1, Poly p2, Poly * psub)
 {
+    //Soustraie p1 et p2 et stocke le résultat dans psub
     int i;
 
     psub->degre = (p1.degre >= p2.degre ? p1.degre : p2.degre);	// renvoie le degré max
@@ -174,72 +190,70 @@ int sub_poly(Poly p1, Poly p2, Poly * psub)
 
 int mul_poly(Poly p1, Poly p2, Poly * pmul)
 {
+    //Multiplie p1 et p2 et stocke le résultat dans pmul
     int i, j;
 
-    pmul->degre = p1.degre+p2.degre;	
+    pmul->degre = p1.degre + p2.degre;
     create_tab(pmul);
 
     for (i = 0; i <= p1.degre; i++) {
-    for (j = 0; j <= p2.degre; j++) {
-	pmul->poly[i+j] = pmul->poly[i+j] + p1.poly[i]*p2.poly[j];
-    }}
+	for (j = 0; j <= p2.degre; j++) {
+	    pmul->poly[i + j] =
+		pmul->poly[i + j] + p1.poly[i] * p2.poly[j];
+	}
+    }
     verify_poly(pmul);
     return 0;
 }
 
-int div_poly(Poly p, Poly pdiv, Poly * pq, Poly *pr )
+int div_poly(Poly p, Poly pdiv, Poly * pq, Poly * pr)
 {
-	int i;
-	Poly pqdiv, prsub;
-	//double q;
+    //Divise p par pdiv et stocke le résultat dans pq et le reste dans pr
+    int i;
+    Poly pqdiv, prsub;
+    //double q;
 
-	pq->degre = p.degre - pdiv.degre; 
-	pr->degre = p.degre - pq->degre;
-	pqdiv.degre = pq->degre + pdiv.degre;
-	prsub.degre = p.degre;
-		
-	create_tab(pq);
-	create_tab(pr);
-	create_tab(&pqdiv);
-	create_tab(&prsub);
+    pq->degre = p.degre - pdiv.degre;
 
-	for (i = pq->degre;i >= 0; i--){
-		copy_poly(p,pr);
-		//Il faut que je soustraie le polynome pq * pdiv à p
-		mul_poly(*pq,pdiv,&pqdiv);
-		printf("pqdiv %d",i);
-		print_poly(pqdiv);
-		sub_poly(*pr,pqdiv,&prsub);			
-		printf("prsub %d",i);
-		print_poly(prsub);
-		//copy_poly(prsub,&p);
-		//printf("p %d",i);
+    //pr->degre = p.degre - pq->degre;
+    pr->degre = pdiv.degre - 1;	// On prend le pr plus petit que pdiv
+    if (pr->degre < 0) {	// On ne fait pas de polynome a degré negatif 
+	pr->degre = 0;
+    }
+    printf("pq degre = %d\n", pq->degre);
+    printf("pr degre = %d\n", pr->degre);
 
-		pq->poly[i] = prsub.poly[i+p.degre-1]/pdiv.poly[pdiv.degre];
-		printf("pqpoly[%d] = %lg ",i,pq->poly[i]);
-		//printf("pq %d",i);
-		//print_poly(*pq);
-/*		//Il faut que je soustraie le polynome pq * pdiv à p
-		mul_poly(pq,pdiv,&pqdiv);
-		printf("pqdiv %d",i);
-		print_poly(pqdiv);
-		/
-		sub_poly(p,pqdiv,&pres);			
-		printf("pres %d",i);
-		print_poly(pres);
-		copy_poly(pres,&p);
-		printf("p %d",i);
-		print_poly(p);
+    pqdiv.degre = pq->degre + pdiv.degre;
+    prsub.degre = p.degre;
 
-		pqdiv.poly[pqdiv.degre] = 0;
-		verify_poly(&pqdiv);
-*/	}
-		mul_poly(*pq,pdiv,&pqdiv);
-		sub_poly(*pr,pqdiv,&prsub);			
-		copy_poly(prsub,pr);	
-	
-	delete_tab(&pqdiv);
-	delete_tab(&prsub);
+    create_tab(pq);
+    create_tab(pr);
+    create_tab(&pqdiv);
+    create_tab(&prsub);
+
+    for (i = pq->degre; i >= 0; i--) {
+	//On récupère le polynome qu'il reste a diviser
+	mul_poly(*pq, pdiv, &pqdiv);
+	printf("pqdiv %d\n", i);
+	print_poly(pqdiv);
+	sub_poly(p, pqdiv, &prsub);
+	printf("prsub %d\n", i);
+	print_poly(prsub);
+
+	pq->poly[i] = prsub.poly[i + pdiv.degre] / pdiv.poly[pdiv.degre];	//On place le bon coefficient dans le bon degré du quotient
+	printf("pqpoly[%d] = %lg \n", i, pq->poly[i]);
+	print_poly(*pq);
+    }
+
+    //On récupère le reste
+    mul_poly(*pq, pdiv, &pqdiv);
+    sub_poly(p, pqdiv, &prsub);
+    copy_poly(prsub, pr);
+    printf("pr fin = \n");
+    print_poly(*pr);
+
+    delete_tab(&pqdiv);
+    delete_tab(&prsub);
 
     return 0;
 }
@@ -310,7 +324,7 @@ int main()
 	    //remplir par le plus grand des deux jusqu'a arrivé au plus petit des polynomes
 	    add_poly(p1, p2, &psum);
 	    print_poly(psum);
-		
+
 	    delete_tab(&p1);
 	    delete_tab(&p2);
 	    delete_tab(&psum);
