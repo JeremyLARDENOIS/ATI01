@@ -76,7 +76,9 @@ int print_poly(Poly p)
 		if (!first_number) {	// Si ce n'est pas le premier nombre
 		    printf(" + ");
 		}
-		printf("%lg", p.poly[i]);
+	    	if ((p.poly[i] != 1)||(i==0)) {	//Si le coefficient est positif
+			printf("%lg", p.poly[i]);
+	   	}
 	    }
 	    if (p.poly[i] < 0) {	//Si le coefficient est négatif
 		if (first_number) {
